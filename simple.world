@@ -9,6 +9,7 @@
       <uri>model://sun</uri>
     </include>
 
-    <plugin name="rtt_gazebo_deployer_world" filename="librtt_gazebo_deployer_world.so"/>
+    <!-- filename should point to the prefix TODO -->
+    <plugin name="rtt_gazebo_deployer_world" filename="build/librtt_gazebo_deployer_world.so"/>
   </world>
 </sdf>
