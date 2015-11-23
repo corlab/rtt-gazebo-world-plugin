@@ -39,7 +39,7 @@ Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. In
 
 // upload robot model (URDF)
 
-`rsb-toolscl0.13 call 'spread:/GazeboDeployerWorldPlugin/spawnModel("/include-path-to/robotOutput.urdf")'`
+`rsb-toolscl0.13 call 'spread:/GazeboDeployerWorldPlugin/spawnModel("/include-path-to/lwr-robot-description/lwr-robot.urdf")'`
 
 // load rtt-gazebo-lwr-integration and bind to kuka-lwr model
 
