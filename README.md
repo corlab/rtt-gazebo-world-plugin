@@ -23,6 +23,8 @@ Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. In
 
 // use your gazebo 6
 
+`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/$insert-prefix-here/lib`
+
 `gzserver -s /include-path-to/rtt-gazebo-clock-plugin/build/librtt_gazebo_system.so /include-path-to/rtt-gazebo-world-plugin/build/simple.world`
 
 ## TODO
