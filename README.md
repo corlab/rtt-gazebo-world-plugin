@@ -15,6 +15,10 @@ Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. In
 
 `make -j 4`
 
+// add plugin to gazebo scope
+
+`export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:/include-path-to/rtt-gazebo-world-plugin/build`
+
 ## TODO
 
 - Exclude Eigen folder
