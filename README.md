@@ -1,5 +1,5 @@
 # rtt-gazebo-world-plugin
-Gazebo world plugin to instantiate a RTT environment inside the Gazebo world.
+Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. Inspired by https://github.com/ahoarau/rtt_gazebo/tree/master/rtt_gazebo_deployer.
 
 ## Install
 
