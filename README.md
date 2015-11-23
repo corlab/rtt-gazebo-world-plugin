@@ -15,7 +15,11 @@ Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. In
 
 `make -j 4`
 
-# Launch Gazebo
+# Launch Gazebo and Spread
+
+// launch spread
+
+`spread -n localhost`
 
 // add plugin to gazebo scope
 
@@ -26,6 +30,10 @@ Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. In
 `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/$insert-prefix-here/lib`
 
 `gzserver -s /include-path-to/rtt-gazebo-clock-plugin/build/librtt_gazebo_system.so /include-path-to/rtt-gazebo-world-plugin/build/simple.world`
+
+// optionally you can launch the clinet for visualization too
+
+`gzclient`
 
 ## TODO
 
