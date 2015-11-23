@@ -35,6 +35,20 @@ Gazebo world plugin to instantiate a RTT environment inside the Gazebo world. In
 
 `gzclient`
 
+## Usage
+
+// upload robot model (URDF)
+
+`rsb-toolscl0.13 call 'spread:/GazeboDeployerWorldPlugin/spawnModel("/include-path-to/robotOutput.urdf")'`
+
+// load rtt-gazebo-lwr-integration and bind to kuka-lwr model
+
+`rsb-toolscl0.13 call -l /$insert-prefix-here/share/rst0.13/proto/sandbox/rst/cogimon/ModelComponentConfig.proto 'spread:/GazeboDeployerWorldPlugin/deployRTTComponentWithModel(pb:.rst.cogimon.ModelComponentConfig:{component_name:"lwr_gazebo" component_type:"LWRGazeboComponent" component_package:"rtt_lwr_gazebo" model_name:"kuka-lwr" script:"/include-path-to/rtt-gazebo-lwr-integration/scripts/lwr_gazebo.ops"})'`
+
+// load position controller template (RTT component)
+
+`rsb-toolscl0.13 call 'spread:/GazeboDeployerWorldPlugin/launchScriptFromFile("/include-path-to/rtt-lwr-controller-template/scripts/rtt_controller.ops")'`
+
 ## TODO
 
 - Exclude Eigen folder
