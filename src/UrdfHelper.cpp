@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace rtt_gazebo_deployer_world {
+namespace rtt_gazebo_deployer_world_plugin {
 
 UrdfHelper::UrdfHelper() {
 
@@ -97,7 +97,7 @@ bool UrdfHelper::spawnSDFModel(TiXmlDocument &gazebo_model_xml,
 		gazebo::math::Vector3 initial_xyz, gazebo::math::Quaternion initial_q,
 		const string reference_frame) {
 
-	// refernce frame for initial pose definition, modify initial pose if defined
+	// reference frame for initial pose definition, modify initial pose if defined
 	gazebo::physics::LinkPtr frame = boost::dynamic_pointer_cast<
 			gazebo::physics::Link>(world_->GetEntity(reference_frame));
 	if (frame) {

@@ -1,11 +1,11 @@
 /*
- * gazebo_deployer_world_plugin.h
+ * rtt_gazebo_deployer_world_plugin.h
  *
  *  Created on: Oct 12, 2015
  *      Author: dwigand
  */
-#ifndef __RTT_GAZEBO_DEPLOYER_GAZEBO_DEPLOYER_WORLD_PLUGIN_H
-#define __RTT_GAZEBO_DEPLOYER_GAZEBO_DEPLOYER_WORLD_PLUGIN_H
+#ifndef __RTT_GAZEBO_DEPLOYER_WORLD_PLUGIN_H
+#define __RTT_GAZEBO_DEPLOYER_WORLD_PLUGIN_H
 
 #include <boost/thread/mutex.hpp>
 
@@ -26,23 +26,19 @@
 // RST
 #include <rst/cogimon/ModelComponentConfig.pb.h>
 
-//#include <rtt/scripting/Scripting.hpp>
-//#include <rtt/transports/corba/corba.h>
-//#include <rtt/transports/corba/TaskContextServer.hpp>
-
 #include "RTTComponentPack.h"
 #include "UrdfHelper.h"
 
-namespace rtt_gazebo_deployer_world {
+namespace rtt_gazebo_deployer_world_plugin {
 
-class GazeboDeployerWorldPlugin: public gazebo::WorldPlugin {
+class RTTGazeboDeployerWorldPlugin: public gazebo::WorldPlugin {
 public:
 
 	// Constructor
-	GazeboDeployerWorldPlugin();
+	RTTGazeboDeployerWorldPlugin();
 
 	// Destructor
-	virtual ~GazeboDeployerWorldPlugin();
+	virtual ~RTTGazeboDeployerWorldPlugin();
 
 	/*
 	 * Init. Hook of the WorldPlugin
@@ -82,6 +78,8 @@ private:
 			boost::shared_ptr<rst::cogimon::ModelComponentConfig> deployerConfig);
 
 	void spawnModel_cb(boost::shared_ptr<std::string> modelFile);
+
+	void spawnModelSDF_cb(boost::shared_ptr<std::string> modelFile);
 
 	void addOrocosComponentIncludePath_cb(boost::shared_ptr<std::string> path);
 
@@ -126,5 +124,5 @@ private:
 };
 }
 
-#endif // ifndef __RTT_GAZEBO_DEPLOYER_GAZEBO_DEPLOYER_WORLD_PLUGIN_H
+#endif // ifndef __RTT_GAZEBO_DEPLOYER_WORLD_PLUGIN_H
 

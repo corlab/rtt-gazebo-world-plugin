@@ -16,7 +16,7 @@
 
 #include <boost/weak_ptr.hpp>
 
-namespace rtt_gazebo_deployer_world {
+namespace rtt_gazebo_deployer_world_plugin {
 /**
  * This class acts just as some kind of struct to combine rtt component, associated model and gazebo caller.
  */

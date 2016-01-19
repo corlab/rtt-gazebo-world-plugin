@@ -7,7 +7,7 @@
 
 #include "RTTComponentPack.h"
 
-namespace rtt_gazebo_deployer_world {
+namespace rtt_gazebo_deployer_world_plugin {
 
 RTTComponentPack::RTTComponentPack(
 		RTT::OperationCaller<void(gazebo::physics::ModelPtr)> _gzUpdateCaller,

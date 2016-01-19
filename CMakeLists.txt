@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rtt_gazebo_deployer_world)
+project(rtt_gazebo_deployer_world_plugin)
 
 find_package(OROCOS-RTT REQUIRED COMPONENTS rtt-scripting rtt-transport-corba rtt-typekit)
 if (NOT OROCOS-RTT_FOUND)
@@ -65,8 +65,8 @@ orocos_use_package( orocos-rtt-corba REQUIRED )
 add_definitions(-DRTT_COMPONENT)
 add_definitions(${OROCOS-RTT_DEFINITIONS})
 add_library(${PROJECT_NAME} SHARED
-  src/gazebo_deployer_world_plugin.cpp
-  src/gazebo_deployer_world_plugin.h
+  src/rtt_gazebo_deployer_world_plugin.cpp
+  src/rtt_gazebo_deployer_world_plugin.h
   src/RTTComponentPack.cpp
   src/RTTComponentPack.h
   src/UrdfHelper.cpp
