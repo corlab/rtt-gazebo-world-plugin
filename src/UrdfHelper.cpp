@@ -188,6 +188,100 @@ void UrdfHelper::stripXmlDeclaration(string &model_xml) {
 		model_xml.replace(pos1, pos2 - pos1 + 2, std::string(""));
 }
 
+bool UrdfHelper::updateURDFAttributes(TiXmlDocument &model_xml,
+		std::string model_name) {//, gazebo::math::Vector3 initial_xyz, gazebo::math::Quaternion initial_q) {
+
+//	TiXmlElement* pose_element; // This is used by both reguar and database SDFs
+
+//	TiXmlElement* gazebo_tixml = model_xml.FirstChildElement("robot");
+//	if (!gazebo_tixml) {
+//		gzwarn
+//				<< "Could not find <robot> element in urdf, so name cannot be applied"
+//				<< endl;
+//		return;
+//	}
+
+	// Check SDF for optional model element. May not have one
+	TiXmlElement* model_tixml = model_xml.FirstChildElement("robot");
+	if (model_tixml) {
+		// Update model name
+		if (model_tixml->Attribute("name") != NULL) {
+			// removing old model name
+			model_tixml->RemoveAttribute("name");
+		}
+		// replace with user specified name
+		model_tixml->SetAttribute("name", model_name);
+		return true;
+	} else {
+		gzwarn
+				<< "Could not find <robot> element in URDF, so name cannot be applied"
+				<< endl;
+		return false;
+	}
+	//else {
+//		// Check SDF for world element
+//		TiXmlElement* world_tixml = gazebo_tixml->FirstChildElement("world");
+//		if (!world_tixml) {
+//			gzwarn
+//					<< "Could not find <model> or <world> element in sdf, so name and initial position cannot be applied"
+//					<< endl;
+//			return;
+//		}
+//		// If not <model> element, check SDF for required include element
+//		model_tixml = world_tixml->FirstChildElement("include");
+//		if (!model_tixml) {
+//			gzwarn
+//					<< "Could not find <include> element in sdf, so name and initial position cannot be applied"
+//					<< endl;
+//			return;
+//		}
+//
+//		// Check for name element
+//		TiXmlElement* name_tixml = model_tixml->FirstChildElement("name");
+//		if (!name_tixml) {
+//			// Create the name element
+//			name_tixml = new TiXmlElement("name");
+//			model_tixml->LinkEndChild(name_tixml);
+//		}
+//
+//		// Set the text within the name element
+//		TiXmlText* text = new TiXmlText(model_name);
+//		name_tixml->LinkEndChild(text);
+//	}
+//
+//	// Check for the pose element
+//	pose_element = model_tixml->FirstChildElement("pose");
+//	gazebo::math::Pose model_pose;
+//
+//	// Create the pose element if it doesn't exist
+//	// Remove it if it exists, since we are inserting a new one
+//	if (pose_element) {
+//		// save pose_element in math::Pose and remove child
+//		model_pose = this->parsePose(pose_element->GetText());
+//		model_tixml->RemoveChild(pose_element);
+//	}
+//
+//	// Set and link the pose element after adding initial pose
+//	{
+//		// add pose_element Pose to initial pose
+//		gazebo::math::Pose new_model_pose = model_pose
+//				+ gazebo::math::Pose(initial_xyz, initial_q);
+//
+//		// Create the string of 6 numbers
+//		std::ostringstream pose_stream;
+//		gazebo::math::Vector3 model_rpy = new_model_pose.rot.GetAsEuler(); // convert to Euler angles for Gazebo XML
+//		pose_stream << new_model_pose.pos.x << " " << new_model_pose.pos.y
+//				<< " " << new_model_pose.pos.z << " " << model_rpy.x << " "
+//				<< model_rpy.y << " " << model_rpy.z;
+//
+//		// Add value to pose element
+//		TiXmlText* text = new TiXmlText(pose_stream.str());
+//		TiXmlElement* new_pose_element = new TiXmlElement("pose");
+//		new_pose_element->LinkEndChild(text);
+//		model_tixml->LinkEndChild(new_pose_element);
+//	}
+}
+
 void UrdfHelper::updateSDFAttributes(TiXmlDocument &gazebo_model_xml,
 		std::string model_name, gazebo::math::Vector3 initial_xyz,
 		gazebo::math::Quaternion initial_q) {

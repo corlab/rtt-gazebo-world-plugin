@@ -121,6 +121,9 @@ private:
 
 	// RTT Component Pack
 	std::vector<RTTComponentPack> all_components_;
+
+	// contains the loaded models also holding their referenced URDF strings
+	std::map<std::string, std::string> urdfModelAssoc;
 };
 }
 

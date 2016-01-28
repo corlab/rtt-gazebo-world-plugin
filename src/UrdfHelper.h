@@ -23,16 +23,17 @@ namespace rtt_gazebo_deployer_world_plugin {
 class UrdfHelper {
 public:
 	UrdfHelper();
-	virtual ~UrdfHelper();
-	bool isURDF(const std::string model_xml);
-	bool isSDF(const std::string model_xml);
-	bool spawnURDFModel(const std::string modelFile, std::string &model_xml_out);
-	bool spawnSDFModel(TiXmlDocument &gazebo_model_xml,
-			gazebo::physics::WorldPtr world_, const std::string model_xml_in,
-			const std::string model_name, const std::string robot_namespace_,
+	virtual ~UrdfHelper();bool isURDF(const std::string model_xml);
+
+	bool isSDF(const std::string model_xml);bool spawnURDFModel(
+			const std::string modelFile, std::string &model_xml_out);bool spawnSDFModel(
+			TiXmlDocument &gazebo_model_xml, gazebo::physics::WorldPtr world_,
+			const std::string model_xml_in, const std::string model_name,
+			const std::string robot_namespace_,
 			gazebo::math::Vector3 initial_xyz,
 			gazebo::math::Quaternion initial_q,
 			const std::string reference_frame);
+	bool updateURDFAttributes(TiXmlDocument &model_xml, std::string model_name);
 
 private:
 	void stripXmlDeclaration(std::string &model_xml);

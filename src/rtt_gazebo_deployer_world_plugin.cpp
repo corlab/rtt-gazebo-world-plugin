@@ -18,6 +18,8 @@
 #include <ocl/DeploymentComponent.hpp>
 #include <ocl/LoggingService.hpp>
 #include <rtt/Logger.hpp>
+#include <rtt/Property.hpp>
+#include <rtt/Attribute.hpp>
 
 #include <rtt/scripting/Scripting.hpp>
 #include <rtt/plugin/PluginLoader.hpp>
@@ -287,7 +289,7 @@ void RTTGazeboDeployerWorldPlugin::spawnModel_cb(
 	TiXmlDocument gazebo_model_xml;
 
 	// robot name
-	string robotName = "kuka-lwr";
+	string robotName = "kuka-lwr"; // TODO make this dynamic
 	// robot namespace
 	string robotNS = "";
 	// get initial pose of model
@@ -296,6 +298,17 @@ void RTTGazeboDeployerWorldPlugin::spawnModel_cb(
 	gazebo::math::Quaternion initial_q(1, 0, 0, 0);
 	// world reference frame "", world, map, /map
 	string referenceFrame = "";
+
+	string urdfStringXml;
+
+	// todo prettyfy, 'cause it's only for passing to spawned component
+	gazebo_model_xml.Parse(model_xml.c_str());
+	if (urdfHelper->updateURDFAttributes(gazebo_model_xml, robotName)) {
+		TiXmlPrinter printer;
+		printer.SetIndent("    ");
+		gazebo_model_xml.Accept(&printer);
+		urdfStringXml = printer.CStr();
+	}
 
 	if (!urdfHelper->spawnSDFModel(gazebo_model_xml, parent_model_, model_xml,
 			robotName, robotNS, initial_xyz, initial_q, referenceFrame)) {
@@ -370,6 +383,8 @@ void RTTGazeboDeployerWorldPlugin::spawnModel_cb(
 		}
 		usleep(2000);
 	}
+
+	urdfModelAssoc[robotName] = urdfStringXml;
 
 	parent_model_->PrintEntityTree();
 	return; // true
@@ -472,6 +487,43 @@ boost::shared_ptr<bool> RTTGazeboDeployerWorldPlugin::deployRTTComponentWithMode
 		return boost::shared_ptr<bool>(new bool(false));
 	}
 
+	if (!new_rtt_component->provides("misc")->hasAttribute("urdf_string")) {
+		gzwarn << "No attribute with name: urdf_string found in "
+				<< new_rtt_component->getName()
+				<< ". Hence, URDF could not be set." << endl;
+
+		RTT::log(RTT::Warning) << "No attribute with name: urdf_string found."
+				<< RTT::endlog();
+	} else {
+
+		// attach associated URDF to component
+		RTT::Attribute<std::string> urdf_string_prop = new_rtt_component->provides("misc")->getAttribute("urdf_string");
+
+		if (urdf_string_prop.ready()) {
+			if (urdfModelAssoc.count(deployerConfig->model_name())) {
+				urdf_string_prop.set(
+						urdfModelAssoc[deployerConfig->model_name()]);
+				RTT::log(RTT::Info) << "URDF properly set for "
+						<< deployerConfig->component_name() << RTT::endlog();
+			} else {
+				gzerr << "URDF for " << deployerConfig->model_name()
+						<< " could not be found." << endl;
+				RTT::log(RTT::Error) << "URDF for "
+						<< deployerConfig->component_name()
+						<< " could not be found." << RTT::endlog();
+			}
+		} else {
+			gzwarn << "No property with name: urdf_string found in "
+					<< new_rtt_component->getName()
+					<< ". Hence, URDF could not be set." << endl;
+
+			RTT::log(RTT::Warning)
+					<< "No property with name: urdf_string found in "
+					<< new_rtt_component->getName()
+					<< ". Hence, URDF could not be set." << RTT::endlog();
+		}
+	}
+
 	// Configure the component with the parent model
 	RTT::OperationCaller<bool(gazebo::physics::ModelPtr)> gazebo_configure =
 			new_rtt_component->provides("gazebo")->getOperation("configure");
@@ -569,6 +621,7 @@ gazebo::physics::ModelPtr RTTGazeboDeployerWorldPlugin::pollForModel(
 		std::string modelName, const int timeout) {
 	int timer = 0;
 	gazebo::physics::ModelPtr model;
+
 	while (!(model = parent_model_->GetModel(modelName))) {
 		gazebo::common::Time::MSleep(10);
 		timer++;
