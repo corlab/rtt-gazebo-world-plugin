@@ -60,6 +60,7 @@ public:
 	void loadOrocosScript(std::string oro_script);
 	void loadLuaScriptFromFile(std::string lua_script_file);
 	void loadLuaScript(std::string lua_script);
+	void terminateCleanly();
 
 private:
 	bool ends_with(const std::string& str, const std::string& end);

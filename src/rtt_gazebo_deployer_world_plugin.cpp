@@ -92,6 +92,7 @@ RTTGazeboDeployerWorldPlugin::RTTGazeboDeployerWorldPlugin() :
 									&RTTGazeboDeployerWorldPlugin::addOrocosComponentIncludePath_cb,
 									this, _1))));
 
+
 	server->registerMethod("addOrocosPluginIncludePath",
 			LocalServer::CallbackPtr(
 					new LocalServer::FunctionCallback<string, void>(
@@ -105,6 +106,48 @@ RTTGazeboDeployerWorldPlugin::RTTGazeboDeployerWorldPlugin() :
 							boost::bind(
 									&RTTGazeboDeployerWorldPlugin::launchScriptFromFile_cb,
 									this, _1))));
+
+	server->registerMethod("terminateCleanly",
+			LocalServer::CallbackPtr(
+					new LocalServer::FunctionCallback<void, void>(
+							boost::bind(
+									&RTTGazeboDeployerWorldPlugin::terminateCleanly,
+									this))));
+}
+
+void RTTGazeboDeployerWorldPlugin::terminateCleanly() {
+	if (update_connections_.size() > 0)
+		for (std::vector<gazebo::event::ConnectionPtr>::iterator it =
+				update_connections_.begin(); it != update_connections_.end();
+				++it) {
+			gazebo::event::Events::DisconnectWorldUpdateBegin(*it);
+		}
+
+	gzmsg << "Stop all Orocos Components" << endl;
+	if (!deployer->stopComponents()) {
+		gzerr << "Orocos Components could not be stopped properly" << endl;
+	}
+	gzmsg << "Clean-up all Orocos Components" << endl;
+	if (!deployer->cleanupComponents()) {
+		gzerr << "Orocos Components could not be cleaned-up properly" << endl;
+	}
+	gzmsg << "Unload all Orocos Components" << endl;
+	if (!deployer->unloadComponents()) {
+		gzerr << "Orocos Components could not be unloaded properly" << endl;
+	}
+	gzmsg << "Stop Deployer itself" << endl;
+	if (!deployer->stop()) {
+		gzerr << "Deployer itself could not be stopped properly" << endl;
+	}
+	gzmsg << "Clean-up Deployer itself" << endl;
+	if (!deployer->cleanup()) {
+		gzerr << "Deployer itself could not be cleaned-up properly" << endl;
+	}
+	gzmsg << "Clear Deployer itself" << endl;
+	deployer->clear();
+
+	parent_model_->Stop();
+	parent_model_->Fini();
 }
 
 void RTTGazeboDeployerWorldPlugin::launchScriptFromFile_cb(
@@ -497,7 +540,9 @@ boost::shared_ptr<bool> RTTGazeboDeployerWorldPlugin::deployRTTComponentWithMode
 	} else {
 
 		// attach associated URDF to component
-		RTT::Attribute<std::string> urdf_string_prop = new_rtt_component->provides("misc")->getAttribute("urdf_string");
+		RTT::Attribute<std::string> urdf_string_prop =
+				new_rtt_component->provides("misc")->getAttribute(
+						"urdf_string");
 
 		if (urdf_string_prop.ready()) {
 			if (urdfModelAssoc.count(deployerConfig->model_name())) {
@@ -591,19 +636,19 @@ boost::shared_ptr<bool> RTTGazeboDeployerWorldPlugin::deployRTTComponentWithMode
 
 RTTGazeboDeployerWorldPlugin::~RTTGazeboDeployerWorldPlugin() {
 	// Disconnect from gazebo events
-	for (std::vector<gazebo::event::ConnectionPtr>::iterator it =
-			update_connections_.begin(); it != update_connections_.end();
-			++it) {
-		gazebo::event::Events::DisconnectWorldUpdateBegin(*it);
-	}
+	terminateCleanly();
 
-	//deployer->getPeerList() // DO ot this way, do kill everything that is running in the deployer?
-
-	for (std::vector<RTTComponentPack>::iterator componentPackItr =
-			all_components_.begin(); componentPackItr != all_components_.end();
-			++componentPackItr) {
-		componentPackItr->rttComponent->stop();
-	}
+//	for (std::vector<gazebo::event::ConnectionPtr>::iterator it =
+//			update_connections_.begin(); it != update_connections_.end();
+//			++it) {
+//		gazebo::event::Events::DisconnectWorldUpdateBegin(*it);
+//	}
+//
+//	for (std::vector<RTTComponentPack>::iterator componentPackItr =
+//			all_components_.begin(); componentPackItr != all_components_.end();
+//			++componentPackItr) {
+//		componentPackItr->rttComponent->stop();
+//	}
 
 }
 
