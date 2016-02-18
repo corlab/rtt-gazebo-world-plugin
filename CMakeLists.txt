@@ -86,7 +86,7 @@ target_link_libraries(${PROJECT_NAME}
   ${RST_LIBRARIES} 
 )
 
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
 
 orocos_generate_package()
 #    DEPENDS rtt_gazebo_msgs
