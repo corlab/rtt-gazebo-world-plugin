@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<sdf version="1.5">
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="WipeBoard">
+      <pose>0.753698 0 0.464900 0 -1.027733 0</pose>
+      <static>true</static>
+      <link name="wbLink">
+        <collision name="wbCollision">
+          <geometry>
+            <box>
+              <size>0.762456 1.072930 0.025</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="wbVisual">
+          <geometry>
+            <box>
+              <size>0.762456 1.072930 0.025</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+      <plugin name="libgazebo-rsb-model-state-plugin" filename="libgazebo-rsb-model-state-plugin.so">
+      	<!--scope name="scope_current_pose">/gazebo/model/status</scope-->
+      </plugin>
+    </model>
+
+    <!-- filename should point to the prefix TODO -->
+    <plugin name="rtt_gazebo_deployer_world_plugin" filename="librtt_gazebo_deployer_world_plugin.so"/>
+  </world>
+</sdf>
