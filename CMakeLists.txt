@@ -86,8 +86,11 @@ target_link_libraries(${PROJECT_NAME}
   ${RST_LIBRARIES} 
 )
 
-#set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Release)
 
 orocos_generate_package()
 #    DEPENDS rtt_gazebo_msgs
 #)
+
+install(TARGETS ${PROJECT_NAME}
+     LIBRARY DESTINATION "lib/orocos/gnulinux/${PROJECT_NAME}" COMPONENT libraries)
