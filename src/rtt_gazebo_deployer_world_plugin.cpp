@@ -56,8 +56,8 @@ RTTGazeboDeployerWorldPlugin::RTTGazeboDeployerWorldPlugin() :
 	//addNewOrocosComponentPath("/homes/dwigand/code/cogimon/rosws/gazebo_world/devel/lib/orocos"); // only for convenience TODO remove
 
 	// outside of ros workspace
-	addNewOrocosComponentPath(
-			"/homes/dwigand/code/cogimon/rtt-gazebo-lwr-integration/build/orocos"); // only for convenience TODO remove
+//	addNewOrocosComponentPath(
+//			"/homes/dwigand/code/cogimon/rtt-gazebo-lwr-integration/build/orocos"); // only for convenience TODO remove
 
 	gzmsg << "New loader->getComponentPath(): " << loader->getComponentPath()
 			<< endl;
