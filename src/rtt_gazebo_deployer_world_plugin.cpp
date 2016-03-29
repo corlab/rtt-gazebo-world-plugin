@@ -367,6 +367,9 @@ void RTTGazeboDeployerWorldPlugin::spawnModel_cb(
 	gazebo::transport::PublisherPtr factoryPub = node->Advertise<msgs::Factory>(
 			"~/factory");
 
+	// get robot name from model
+	urdfHelper->getRobotName(gazebo_model_xml, robotName);
+
 	// push to factory iface
 	std::ostringstream stream;
 	stream << gazebo_model_xml;

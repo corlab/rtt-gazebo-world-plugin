@@ -201,7 +201,7 @@ bool UrdfHelper::updateURDFAttributes(TiXmlDocument &model_xml,
 //		return;
 //	}
 
-	if ((model_name != "") && (model_name != NULL)) {
+	if (model_name != "") {
 		// Check SDF for optional model element. May not have one
 		TiXmlElement* model_tixml = model_xml.FirstChildElement("robot");
 		if (model_tixml) {
@@ -220,7 +220,7 @@ bool UrdfHelper::updateURDFAttributes(TiXmlDocument &model_xml,
 			return false;
 		}
 	} else {
-		return false;
+		return true;
 	}
 	//else {
 //		// Check SDF for world element
@@ -306,7 +306,7 @@ void UrdfHelper::updateSDFAttributes(TiXmlDocument &gazebo_model_xml,
 	// Check SDF for optional model element. May not have one
 	TiXmlElement* model_tixml = gazebo_tixml->FirstChildElement("model");
 	if (model_tixml) {
-		if ((model_name != "") && (model_name != NULL)) {
+		if (model_name != "") {
 			// Update model name
 			if (model_tixml->Attribute("name") != NULL) {
 				// removing old model name
@@ -506,7 +506,7 @@ gazebo::math::Vector3 UrdfHelper::parseVector3(const string &str) {
 void UrdfHelper::updateURDFName(TiXmlDocument &gazebo_model_xml,
 		std::string model_name) {
 
-	if ((model_name == "") || (model_name == NULL)) {
+	if (model_name == "") {
 		return;
 	}
 
@@ -522,6 +522,41 @@ void UrdfHelper::updateURDFName(TiXmlDocument &gazebo_model_xml,
 	} else
 		gzwarn << "could not find <robot> element in URDF, name not replaced"
 				<< endl;
+}
+
+void UrdfHelper::getRobotName(TiXmlDocument &gazebo_model_xml,
+		std::string& name) {
+	TiXmlElement* model_tixml = gazebo_model_xml.FirstChildElement("model");
+	if (model_tixml) {
+		// Update model name
+		if (model_tixml->Attribute("name") != NULL) {
+			name = model_tixml->Attribute("name");
+			return;
+		} else {
+			gzwarn
+					<< "could not find <robot name=...> attribute, perhaps its not an SDF?"
+					<< endl;
+		}
+	} else {
+		gzwarn
+				<< "could not find <model> element, perhaps its not an SDF? Trying URDF style..."
+				<< endl;
+	}
+
+	model_tixml = gazebo_model_xml.FirstChildElement("robot");
+	if (model_tixml) {
+		if (model_tixml->Attribute("name") != NULL) {
+			name = model_tixml->Attribute("name");
+		} else {
+			gzwarn
+					<< "could not find <robot name=...> attribute, perhaps its not an URDF?"
+					<< endl;
+		}
+	} else {
+		gzwarn << "could not find <robot> element, perhaps its not an URDF?"
+				<< endl;
+	}
+
 }
 
 }

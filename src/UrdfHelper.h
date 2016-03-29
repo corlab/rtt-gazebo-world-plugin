@@ -32,8 +32,10 @@ public:
 			const std::string robot_namespace_,
 			gazebo::math::Vector3 initial_xyz,
 			gazebo::math::Quaternion initial_q,
-			const std::string reference_frame);
-	bool updateURDFAttributes(TiXmlDocument &model_xml, std::string model_name);
+			const std::string reference_frame);bool updateURDFAttributes(
+			TiXmlDocument &model_xml, std::string model_name);
+
+	void getRobotName(TiXmlDocument &gazebo_model_xml, std::string& name);
 
 private:
 	void stripXmlDeclaration(std::string &model_xml);
