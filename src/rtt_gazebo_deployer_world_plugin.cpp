@@ -332,7 +332,7 @@ void RTTGazeboDeployerWorldPlugin::spawnModel_cb(
 	TiXmlDocument gazebo_model_xml;
 
 	// robot name
-	string robotName = "kuka-lwr"; // TODO make this dynamic
+	string robotName = ""; // TODO make this dynamic: kuka-lwr
 	// robot namespace
 	string robotNS = "";
 	// get initial pose of model

@@ -201,21 +201,25 @@ bool UrdfHelper::updateURDFAttributes(TiXmlDocument &model_xml,
 //		return;
 //	}
 
-	// Check SDF for optional model element. May not have one
-	TiXmlElement* model_tixml = model_xml.FirstChildElement("robot");
-	if (model_tixml) {
-		// Update model name
-		if (model_tixml->Attribute("name") != NULL) {
-			// removing old model name
-			model_tixml->RemoveAttribute("name");
+	if ((model_name != "") && (model_name != NULL)) {
+		// Check SDF for optional model element. May not have one
+		TiXmlElement* model_tixml = model_xml.FirstChildElement("robot");
+		if (model_tixml) {
+			// Update model name
+			if (model_tixml->Attribute("name") != NULL) {
+				// removing old model name
+				model_tixml->RemoveAttribute("name");
+			}
+			// replace with user specified name
+			model_tixml->SetAttribute("name", model_name);
+			return true;
+		} else {
+			gzwarn
+					<< "Could not find <robot> element in URDF, so name cannot be applied"
+					<< endl;
+			return false;
 		}
-		// replace with user specified name
-		model_tixml->SetAttribute("name", model_name);
-		return true;
 	} else {
-		gzwarn
-				<< "Could not find <robot> element in URDF, so name cannot be applied"
-				<< endl;
 		return false;
 	}
 	//else {
@@ -302,13 +306,15 @@ void UrdfHelper::updateSDFAttributes(TiXmlDocument &gazebo_model_xml,
 	// Check SDF for optional model element. May not have one
 	TiXmlElement* model_tixml = gazebo_tixml->FirstChildElement("model");
 	if (model_tixml) {
-		// Update model name
-		if (model_tixml->Attribute("name") != NULL) {
-			// removing old model name
-			model_tixml->RemoveAttribute("name");
+		if ((model_name != "") && (model_name != NULL)) {
+			// Update model name
+			if (model_tixml->Attribute("name") != NULL) {
+				// removing old model name
+				model_tixml->RemoveAttribute("name");
+			}
+			// replace with user specified name
+			model_tixml->SetAttribute("name", model_name);
 		}
-		// replace with user specified name
-		model_tixml->SetAttribute("name", model_name);
 	} else {
 		// Check SDF for world element
 		TiXmlElement* world_tixml = gazebo_tixml->FirstChildElement("world");
@@ -499,6 +505,11 @@ gazebo::math::Vector3 UrdfHelper::parseVector3(const string &str) {
 
 void UrdfHelper::updateURDFName(TiXmlDocument &gazebo_model_xml,
 		std::string model_name) {
+
+	if ((model_name == "") || (model_name == NULL)) {
+		return;
+	}
+
 	TiXmlElement* model_tixml = gazebo_model_xml.FirstChildElement("robot");
 	// replace model name if one is specified by the user
 	if (model_tixml) {
